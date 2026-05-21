@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Growth Compass",
+    "slug": "growth-compass",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "growthcompass",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.personal.growthcompass",
+      "adaptiveIcon": {
+        "backgroundColor": "#F4F0E8"
+      }
+    },
+    "plugins": []
+  }
+}
