@@ -1,14 +1,20 @@
 {
   "build": {
-    "preview": {
+    "apk": {
+      "developmentClient": false,
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_NO_DOTENV": "1"
       }
     },
-    "production": {
+    "standalone-apk": {
+      "developmentClient": false,
+      "distribution": "internal",
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       }
     }
   }

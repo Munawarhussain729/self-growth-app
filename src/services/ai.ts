@@ -78,6 +78,7 @@ export function addEstimatedSpend(state: AppState, amount: number): AppState {
 }
 
 async function callOpenAi(apiKey: string, model: string, instructions: string, input: string): Promise<AiResult> {
+  const isGpt5Family = model.startsWith("gpt-5");
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
@@ -88,7 +89,9 @@ async function callOpenAi(apiKey: string, model: string, instructions: string, i
       model,
       instructions,
       input,
-      max_output_tokens: 700
+      max_output_tokens: 2500,
+      ...(isGpt5Family ? { reasoning: { effort: "minimal" } } : {}),
+      text: { verbosity: "low" }
     })
   });
 
@@ -101,7 +104,10 @@ async function callOpenAi(apiKey: string, model: string, instructions: string, i
   const text = extractResponseText(json);
 
   if (!text) {
-    throw new Error("The AI returned an empty message. Try again with a shorter question or switch the model to gpt-5-mini.");
+    const incompleteReason = json.incomplete_details?.reason;
+    const status = json.status ? ` Status: ${json.status}.` : "";
+    const reason = incompleteReason ? ` Reason: ${incompleteReason}.` : "";
+    throw new Error(`The AI returned an empty message.${status}${reason} Try again, or switch the model to gpt-5-mini.`);
   }
 
   const inputTokens = json.usage?.input_tokens ?? estimateTokens(`${instructions}\n${input}`);
