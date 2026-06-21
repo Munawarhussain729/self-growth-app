@@ -1,4 +1,4 @@
-package com.growthcompasscli
+package com.personal.growthcompass
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

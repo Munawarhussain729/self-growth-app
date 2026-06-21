@@ -1,4 +1,4 @@
-package com.growthcompasscli
+package com.personal.growthcompass
 
 import android.app.Application
 import com.facebook.react.PackageList
