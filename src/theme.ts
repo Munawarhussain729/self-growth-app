@@ -12,6 +12,10 @@ export const colors = {
   rose: "#A45F63",
   blue: "#496A82",
   blueSoft: "#E3ECF1",
+  midnight: "#243A35",
+  ember: "#C07A45",
+  lavender: "#7B7097",
+  lavenderSoft: "#ECE8F4",
   danger: "#9D3D32",
   success: "#2F7D5F"
 };

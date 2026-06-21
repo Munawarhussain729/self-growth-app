@@ -1,29 +1,4 @@
 {
-  "expo": {
-    "name": "Growth Compass",
-    "slug": "growth-compass",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "newArchEnabled": false,
-    "userInterfaceStyle": "light",
-    "scheme": "growthcompass",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.personal.growthcompass",
-      "adaptiveIcon": {
-        "backgroundColor": "#F4F0E8"
-      }
-    },
-    "plugins": [],
-    "extra": {
-      "eas": {
-        "projectId": "13a997bb-17fa-4171-ab56-cd22f4c2687e"
-      }
-    }
-  }
+  "name": "GrowthCompassCli",
+  "displayName": "Growth Compass"
 }

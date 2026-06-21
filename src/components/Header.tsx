@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.ink,
-    fontSize: 31,
-    lineHeight: 36,
-    fontWeight: "800"
+    fontSize: 32,
+    lineHeight: 37,
+    fontWeight: "900"
   },
   subtitle: {
     color: colors.muted,

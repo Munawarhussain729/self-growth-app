@@ -40,6 +40,19 @@ export type BookSummary = {
   reflectionPrompt: string;
 };
 
+export type HackathonEvent = {
+  id: string;
+  title: string;
+  location: string;
+  url: string;
+  timeLeft: string;
+  dates: string;
+  source: string;
+  themes: string[];
+  isOnline: boolean;
+  isPakistanMatch: boolean;
+};
+
 export type CoachMessage = {
   id: string;
   role: "user" | "assistant";
