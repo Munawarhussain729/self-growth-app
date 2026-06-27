@@ -17,5 +17,7 @@ export const defaultState: AppState = {
     notificationsEnabled: false
   },
   journal: [],
-  coach: []
+  coach: [],
+  bookAnswers: [],
+  bookNotes: []
 };

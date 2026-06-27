@@ -59,3 +59,23 @@ export type CoachMessage = {
   content: string;
   createdAt: string;
 };
+
+export type BookAnswer = {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  prompt: string;
+  answer: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BookNote = {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  content: string;
+  selectedText?: string;
+  createdAt: string;
+  updatedAt: string;
+};

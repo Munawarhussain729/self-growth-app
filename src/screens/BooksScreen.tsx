@@ -7,14 +7,22 @@ import {
 	Text,
 	TouchableOpacity,
 	View,
+	TextInput,
 } from "react-native";
 import { Card } from "../components/Card";
 import { Field } from "../components/Field";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
+import { NoteModal } from "../components/NoteModal";
 import { recommendedBooks, scoreBook } from "../data/books";
 import { fetchFreshGrowthBooks } from "../services/books";
 import type { AppState } from "../storage";
+import {
+	addBookAnswer,
+	addBookNote,
+	getBookAnswer,
+	updateBookAnswer,
+} from "../storage";
 import { colors, radius, spacing } from "../theme";
 import type { BookSummary } from "../types";
 
@@ -22,12 +30,17 @@ const PAGE_SIZE = 5;
 
 export function BooksScreen({
 	state,
+	updateState,
 }: { state: AppState; updateState: (state: AppState) => void }) {
 	const [selectedBook, setSelectedBook] = useState<BookSummary | null>(null);
 	const [query, setQuery] = useState("");
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 	const [freshBooks, setFreshBooks] = useState<BookSummary[]>([]);
 	const [refreshingBooks, setRefreshingBooks] = useState(false);
+	const [answerText, setAnswerText] = useState("");
+	const [isSaving, setIsSaving] = useState(false);
+	const [noteModalVisible, setNoteModalVisible] = useState(false);
+	const [noteBookTitle, setNoteBookTitle] = useState("");
 
 	const matchedBooks = useMemo(() => {
 		const lower = query.trim().toLowerCase();
@@ -50,6 +63,48 @@ export function BooksScreen({
 				.includes(lower),
 		);
 	}, [freshBooks, query, state.profile.goals]);
+
+	// Load existing answer when book is selected
+	React.useEffect(() => {
+		if (selectedBook) {
+			const existingAnswer = getBookAnswer(state, selectedBook.id);
+			setAnswerText(existingAnswer?.answer || "");
+		}
+	}, [selectedBook, state]);
+
+	const saveAnswer = () => {
+		if (!selectedBook) return;
+		setIsSaving(true);
+		
+		const existingAnswer = getBookAnswer(state, selectedBook.id);
+		let nextState;
+		
+		if (existingAnswer) {
+			nextState = updateBookAnswer(state, existingAnswer.id, answerText);
+		} else {
+			nextState = addBookAnswer(state, {
+				bookId: selectedBook.id,
+				bookTitle: selectedBook.title,
+				prompt: selectedBook.reflectionPrompt,
+				answer: answerText,
+			});
+		}
+		
+		updateState(nextState);
+		setIsSaving(false);
+	};
+
+	const handleSaveNote = (content: string, selectedText?: string) => {
+		if (!selectedBook) return;
+		const nextState = addBookNote(state, {
+			bookId: selectedBook.id,
+			bookTitle: selectedBook.title,
+			content,
+			selectedText,
+		});
+		updateState(nextState);
+		setNoteModalVisible(false);
+	};
 
 	const visibleBooks = matchedBooks.slice(0, visibleCount);
 
@@ -137,57 +192,90 @@ export function BooksScreen({
 					<View style={styles.divider} />
 					<Text style={styles.prompt}>{selectedBook.reflectionPrompt}</Text>
 				</Card>
+				<Card style={styles.section}>
+					<Text style={styles.sectionTitle}>Your Answer</Text>
+					<TextInput
+						style={styles.answerInput}
+						placeholder="Write your reflection here..."
+						placeholderTextColor={colors.muted}
+						value={answerText}
+						onChangeText={setAnswerText}
+						onEndEditing={saveAnswer}
+						multiline
+						numberOfLines={4}
+						textAlignVertical="top"
+					/>
+					{isSaving ? (
+						<Text style={styles.saveStatus}>Saving...</Text>
+					) : answerText ? (
+						<Text style={styles.saveStatus}>✓ Saved</Text>
+					) : null}
+				</Card>
+				<TouchableOpacity
+					style={styles.fab}
+					onPress={() => {
+						if (selectedBook) {
+							setNoteBookTitle(selectedBook.title);
+							setNoteModalVisible(true);
+						}
+					}}
+					accessibilityRole="button"
+					accessibilityLabel="Add note"
+				>
+					<Icon name="create-outline" size={24} color={colors.canvas} />
+				</TouchableOpacity>
 			</ScrollView>
 		);
 	}
 
 	return (
-		<FlatList
-			data={visibleBooks}
-			keyExtractor={(book) => book.id}
-			showsVerticalScrollIndicator={false}
-			keyboardShouldPersistTaps="handled"
-			onEndReached={() =>
-				setVisibleCount((current) =>
-					Math.min(current + PAGE_SIZE, matchedBooks.length),
-				)
-			}
-			onEndReachedThreshold={0.25}
-			contentContainerStyle={styles.listContent}
-			ListHeaderComponent={
-				<View>
-					<Header
-						eyebrow="Books"
-						title="Recommended reading."
-						subtitle="Search or browse original summaries matched to your growth goals."
-					/>
-					<Card style={styles.libraryCard}>
-						<View style={styles.libraryAccent} />
-						<View style={styles.libraryTop}>
-							<View>
-								<Text style={styles.libraryTitle}>
-									{matchedBooks.length} books
-								</Text>
-								<Text style={styles.libraryCaption}>
-									Sorted by your selected interests
-								</Text>
+		<>
+			<FlatList
+				data={visibleBooks}
+				keyExtractor={(book) => book.id}
+				showsVerticalScrollIndicator={false}
+				keyboardShouldPersistTaps="handled"
+				onEndReached={() =>
+					setVisibleCount((current) =>
+						Math.min(current + PAGE_SIZE, matchedBooks.length),
+					)
+				}
+				onEndReachedThreshold={0.25}
+				contentContainerStyle={styles.listContent}
+				ListHeaderComponent={
+					<View>
+						<Header
+							eyebrow="Books"
+							title="Recommended reading."
+							subtitle="Search or browse original summaries matched to your growth goals."
+						/>
+						<Card style={styles.libraryCard}>
+							<View style={styles.libraryAccent} />
+							<View style={styles.libraryTop}>
+								<View>
+									<Text style={styles.libraryTitle}>
+										{matchedBooks.length} books
+									</Text>
+									<Text style={styles.libraryCaption}>
+										Sorted by your selected interests
+									</Text>
+								</View>
+								<View style={styles.libraryIcon}>
+									<Icon name="library-outline" size={24} color={colors.accent} />
+								</View>
 							</View>
-							<View style={styles.libraryIcon}>
-								<Icon name="library-outline" size={24} color={colors.accent} />
-							</View>
-						</View>
-						<TouchableOpacity
-							style={styles.refreshButton}
-							onPress={refreshBooks}
-							disabled={refreshingBooks}
-						>
-							<Icon name="refresh" size={17} color={colors.accent} />
-							<Text style={styles.refreshText}>
-								{refreshingBooks
-									? "Fetching new books..."
-									: "Refresh book suggestions"}
-							</Text>
-						</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.refreshButton}
+								onPress={refreshBooks}
+								disabled={refreshingBooks}
+							>
+								<Icon name="refresh" size={17} color={colors.accent} />
+								<Text style={styles.refreshText}>
+									{refreshingBooks
+										? "Fetching new books..."
+										: "Refresh book suggestions"}
+								</Text>
+							</TouchableOpacity>
 						<View style={styles.goalRow}>
 							{state.profile.goals.map((goal) => (
 								<View key={goal} style={styles.goalPill}>
@@ -280,6 +368,13 @@ export function BooksScreen({
 				</View>
 			}
 		/>
+		<NoteModal
+			visible={noteModalVisible}
+			onClose={() => setNoteModalVisible(false)}
+			onSave={handleSaveNote}
+			bookTitle={noteBookTitle}
+		/>
+		</>
 	);
 }
 
@@ -502,6 +597,39 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		lineHeight: 24,
 		fontWeight: "900",
+	},
+	answerInput: {
+		backgroundColor: colors.panel,
+		borderWidth: 1,
+		borderColor: colors.border,
+		borderRadius: radius.sm,
+		padding: spacing.md,
+		fontSize: 15,
+		lineHeight: 22,
+		color: colors.ink,
+		minHeight: 100,
+	},
+	saveStatus: {
+		color: colors.accent,
+		fontSize: 12,
+		fontWeight: "700",
+		marginTop: spacing.xs,
+	},
+	fab: {
+		position: "absolute",
+		right: spacing.lg,
+		bottom: spacing.lg,
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: colors.accent,
+		alignItems: "center",
+		justifyContent: "center",
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.3,
+		shadowRadius: 8,
+		elevation: 8,
 	},
 	footer: { minHeight: 56, alignItems: "center", justifyContent: "center" },
 	footerText: { color: colors.muted, fontWeight: "700" },
