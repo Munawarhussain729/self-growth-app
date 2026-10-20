@@ -17,7 +17,12 @@ const iconMap: Record<string, string> = {
   search: "⌕",
   "checkmark-circle": "✓",
   "ellipse-outline": "○",
-  "compass-outline": "◇"
+  "compass-outline": "◇",
+  "create-outline": "✎",
+  "document-text": "📝",
+  "trash-outline": "🗑",
+  "pencil-outline": "✏",
+  "close-outline": "✕"
 };
 
 export function Icon({ name, size = 20, color = "#1F2623", style }: { name: string; size?: number; color?: string; style?: StyleProp<TextStyle> }) {
