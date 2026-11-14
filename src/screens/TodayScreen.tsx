@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Field } from "../components/Field";
-import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { lessonForDate } from "../data/lessons";
 import { promptForDate } from "../data/prompts";

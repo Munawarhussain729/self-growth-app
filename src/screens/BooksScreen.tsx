@@ -500,7 +500,7 @@ export function BooksScreen({
 					}
 				/>
 			) : (
-				<View style={{ flex: 1 }}>
+				<View style={styles.flexFill}>
 					<View style={styles.filterContainer}>
 						<ScrollView
 							horizontal
@@ -690,6 +690,9 @@ function bookCoverColor(id: string) {
 }
 
 const styles = StyleSheet.create({
+	flexFill: {
+		flex: 1,
+	},
 	container: {
 		flex: 1,
 	},
