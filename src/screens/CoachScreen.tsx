@@ -3,7 +3,6 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Field } from "../components/Field";
-import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { addEstimatedSpend, askCoach } from "../services/ai";
 import type { AppState } from "../storage";
