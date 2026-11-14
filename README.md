@@ -10,6 +10,7 @@ Everything is stored on your device. There is no account and no backend. The AI 
   <img src="docs/screenshots/today.png" alt="Today tab with a daily lesson" width="260">
   <img src="docs/screenshots/books.png" alt="Books tab with original summaries" width="260">
   <img src="docs/screenshots/events.png" alt="Events tab with open hackathons" width="260">
+  <img src="docs/screenshots/journal.png" alt="Journal tab with a saved reflection" width="260">
 </p>
 
 ## Features
