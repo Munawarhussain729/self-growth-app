@@ -18,6 +18,12 @@ const DEVPOST_ENDPOINTS = [
   "https://devpost.com/api/hackathons?challenge_type[]=online"
 ];
 
+const ACTIVE_STATES = new Set(["open", "upcoming"]);
+
+export function isActiveHackathon(item: Pick<DevpostHackathon, "open_state">) {
+  return ACTIVE_STATES.has(item.open_state ?? "");
+}
+
 function decodeHtml(value: string) {
   return value
     .replace(/&amp;/g, "&")
@@ -66,7 +72,7 @@ export async function fetchPakistanHackathons(): Promise<HackathonEvent[]> {
 
   responses
     .flat()
-    .filter((item) => item.open_state !== "closed")
+    .filter(isActiveHackathon)
     .map(mapDevpostHackathon)
     .filter((event) => event.isOnline || event.isPakistanMatch)
     .forEach((event) => unique.set(event.id, event));
