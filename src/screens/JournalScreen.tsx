@@ -51,7 +51,7 @@ export function JournalScreen({ state, updateState }: { state: AppState; updateS
 
   return (
     <View>
-      <Header eyebrow="Journal" title="Your saved reflections." subtitle={`${state.journal.length} entries stored locally.`} />
+      <Header eyebrow="Journal" title="Your saved reflections." subtitle={`${state.journal.length} ${state.journal.length === 1 ? "entry" : "entries"} stored locally.`} />
       <Field value={query} onChangeText={setQuery} placeholder="Search your entries..." />
       {editing ? (
         <Card style={styles.editor}>
