@@ -1,6 +1,21 @@
 {
   "name": "GrowthCompassCli",
   "version": "0.0.1",
+  "description": "A local-first React Native app for daily self-growth: lessons, journaling, book summaries and an optional AI coach.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Munawarhussain729/self-growth-app.git"
+  },
+  "keywords": [
+    "react-native",
+    "self-improvement",
+    "journaling",
+    "habits",
+    "local-first",
+    "android",
+    "ios"
+  ],
   "private": true,
   "scripts": {
     "android": "react-native run-android",
