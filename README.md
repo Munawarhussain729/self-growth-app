@@ -4,6 +4,14 @@ A local-first mobile app for self-growth: a daily lesson, a journal, book summar
 
 Everything is stored on your device. There is no account and no backend. The AI features are optional and use your own OpenAI API key.
 
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/today.png" alt="Today tab with a daily lesson" width="260">
+  <img src="docs/screenshots/books.png" alt="Books tab with original summaries" width="260">
+  <img src="docs/screenshots/events.png" alt="Events tab with open hackathons" width="260">
+</p>
+
 ## Features
 
 - **Today**: a daily lesson and a journaling prompt matched to the goals you pick during onboarding.
